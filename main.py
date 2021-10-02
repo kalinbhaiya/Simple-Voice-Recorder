@@ -9,6 +9,7 @@ import sounddevice as sd
 from scipy.io.wavfile import write
 import os
 import threading
+import humanfriendly
 
 
 time2=1
@@ -20,7 +21,6 @@ class Sound_Recorder:
         self.geometry = master.geometry('400x200')
         self.title = master.title('VoiceRecorder')
         self.background = master.config(background='white')
-
         self.label = ttk.Label(master, text='Welcome To Voice Recorder!', font='curive 15 bold italic',
                                foreground='aqua', background='white').pack()
         self.label2 = ttk.Label(master, text='Enter The Duration Of The Recording Here : ', foreground='black',
@@ -48,6 +48,9 @@ class Sound_Recorder:
         self.menu.add_command(label='Instructions',command=self.instructions)
         self.menu_bar.add_cascade(menu=self.menu,label='Help')
         self.menu2 = Menu(self.menu_bar,tearoff=0)
+        self.menu3 = Menu(self.menu_bar,tearoff=0)
+        self.menu3.add_command(label='Exit',command=self.exit1)
+        self.menu_bar.add_cascade(label='App',menu=self.menu3)
         self.master.config(menu=self.menu_bar)
         self.master.protocol('WM_DELETE_WINDOW',self.exit1)
         self.master.eval('tk::PlaceWindow . center')
@@ -81,13 +84,13 @@ class Sound_Recorder:
             def countdown():
 
                 time1 = int(self.entry.get())
-
                 if time2>time1:
                     self.set_time_to_1()
                     root.destroy()
 
                 else:
-                    label.config(text=f'Elapsed Time : {time2}',font='curisve 50 bold italic',bg='black',fg='aqua')
+                    formatted_time = humanfriendly.format_timespan(time2)
+                    label.config(text=f'Elapsed Time : {formatted_time}',font='curisve 40 bold italic',bg='black',fg='aqua')
                     self.increment_time()
                     label.after(1000, countdown)
 
